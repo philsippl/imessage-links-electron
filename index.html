@@ -3,13 +3,18 @@
 <title>Example App</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
 
 </head>
 <body>
 
-  <div class="entry template-entry">
-
+  <div class="header">
+      <div class="header-element" onclick="loadAll()">all</div>
+      <div class="header-element right" onclick="loadBookmarks()">bookmarks</div>
+      <!--<div class="cursor-helper"></div>-->
   </div>
+
+  <div class="entry template-entry"></div>
 
   <script src="test.js"></script>
 </body>

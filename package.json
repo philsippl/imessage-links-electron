@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "example menubar electron app",
   "dependencies": {
+    "electron-json-storage": "^3.0.6",
     "imessage": "^0.1.5",
     "jquery": "^3.2.1",
     "menubar": "*",

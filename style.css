@@ -1,7 +1,11 @@
 html, body{
   padding:0;
   margin: 0;
-  margin-top:10px;
+  margin-top:25px;
+}
+
+.template-entry{
+  display: none;
 }
 
 .entry {
@@ -15,6 +19,7 @@ html, body{
     color: #000;
     font-family: "Helvetica Neue";
     font-weight: 200;
+    position: relative;
 }
 
 .fromMe {
@@ -47,4 +52,51 @@ a {
 
 .fromMe .date{
   color:#fff;
+}
+
+.bookmark {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    margin-top: -10px;
+    color: #ccc;
+}
+
+.bookmark:hover {
+    color: #0D85FE;
+
+}
+
+.fromMe .bookmark {
+  left: -20px;
+}
+
+.header-element {
+    width: 179px;
+    background: #ccc;
+    color: #fff;
+    font-family: "Helvetica Neue";
+    font-weight: 200;
+    text-transform: uppercase;
+    float: left;
+    text-align: center;
+    padding: 10px;
+    height:20px;
+
+}
+
+
+.header-element.right{
+  border-left:2px solid #fff;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.header-element:after {
+    content: attr(data-txt);
 }
