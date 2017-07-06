@@ -21,9 +21,15 @@ var bookmark = function(id){
   storage.has(id+"", function(error, hasKey) {
     if (error) throw error;
 
+    bookmarks[id] = !hasKey;
+
     if (!hasKey) {
       storage.set(id+"", map[id], function(error) {console.log(error)});
+      jquery("#"+id+" i").removeClass("fa-bookmark-o");
+      jquery("#"+id+" i").addClass("fa-bookmark");
     }else{
+      jquery("#"+id+" i").removeClass("fa-bookmark");
+      jquery("#"+id+" i").addClass("fa-bookmark-o");
       storage.remove(id+"", function(error) {console.log(error)});
       if(currentView == "bookmarks"){
         loadBookmarks();
@@ -39,9 +45,11 @@ var im = new iMessage();
 var map = {};
 var cache = [];
 var currentView = "all";
+var bookmarks = {};
 
 var buildList = function(rows){
   for (let obj of rows){
+
       map[obj.ROWID] = obj;
       fromMe = obj.is_from_me
       url = obj.text
@@ -62,7 +70,7 @@ var buildList = function(rows){
       if(fromMe){
         newElement.addClass("fromMe");
       }
-      newElement.html("<div class='bookmark' onclick=\"bookmark("+obj.ROWID+")\"><i class='fa fa-bookmark-o' aria-hidden='true'></i></div><div class='date'>"+date+"</div><a href='"+url+"'>"+url_shortened+"</a>");
+      newElement.html("<div class='bookmark' id='"+obj.ROWID+"' onclick=\"bookmark("+obj.ROWID+")\"><i class='fa fa-bookmark"+(bookmarks[obj.ROWID+""] ? "" : "-o")+"' aria-hidden='true'></i></div><div class='date'>"+date+"</div><a href='"+url+"'>"+url_shortened+"</a>");
       newElement.removeClass("template-entry");
       newElement.click(onclick);
 
@@ -72,14 +80,23 @@ var buildList = function(rows){
 
 var loadAll = function(){
   currentView = "all";
+  jquery(".header-element.right").removeClass("active-header");
+  jquery(".header-element.left").addClass("active-header");
+
   jquery(".template-entry").removeClass("entry");
   jquery(".entry").remove();
   jquery(".template-entry").addClass("entry");
+
+  storage.keys(function(error, keys) {
+    bookmarks = arrayToHash(keys);
+  });
+
+  cache = hashToArray(map);
+
   if(cache.length > 0){
     buildList(cache);
   }else {
     im.getMessages("http", function(err, rows) {
-      cache = rows;
       buildList(rows);
     });
   }
@@ -87,18 +104,35 @@ var loadAll = function(){
 
 var loadBookmarks = function(){
   currentView = "bookmarks";
+
+  jquery(".header-element.left").removeClass("active-header");
+  jquery(".header-element.right").addClass("active-header");
+
   jquery(".template-entry").removeClass("entry");
   jquery(".entry").remove();
   jquery(".template-entry").addClass("entry");
 
   storage.getAll(function(error, data) {
-    var array_values = new Array();
-
-    for (var key in data) {
-        array_values.push(data[key]);
-    }
+    var array_values = hashToArray(data);
     buildList(array_values);
   });
+}
+
+var arrayToHash = function(array){
+  let tmp = {};
+  for (let obj of array){
+    tmp[obj] = true;
+  }
+  return tmp;
+}
+
+var hashToArray = function(hash){
+  var array_values = new Array();
+
+  for (var key in hash) {
+      array_values.push(hash[key]);
+  }
+  return array_values;
 }
 
 loadAll();

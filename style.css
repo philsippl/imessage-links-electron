@@ -97,6 +97,10 @@ a {
     width: 100%;
 }
 
+.active-header{
+  background: #888;
+}
+
 .header-element:after {
     content: attr(data-txt);
 }
