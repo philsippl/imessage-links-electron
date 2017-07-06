@@ -1,0 +1,23 @@
+{
+  "name": "example-menubar-app",
+  "version": "1.0.0",
+  "description": "example menubar electron app",
+  "dependencies": {
+    "imessage": "^0.1.5",
+    "jquery": "^3.2.1",
+    "menubar": "*",
+    "sqlite3": "^3.1.8",
+    "time-ago": "^0.1.0"
+  },
+  "devDependencies": {
+    "electron-packager": "^5.1.0",
+    "electron-prebuilt": "^0.36.0",
+    "electron-rebuild": "^1.5.11"
+  },
+  "main": "main.js",
+  "scripts": {
+    "build": "electron-packager . Example --platform=darwin --arch=x64 --version=0.36.0 --icon=Icon.icns",
+    "start": "electron .",
+    "rebuild": "electron-rebuild -f -w sqlite3"
+  }
+}
