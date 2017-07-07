@@ -1,16 +1,20 @@
 
-require('electron-debug')({showDevTools: true});
-
-
 var menubar = require('menubar')
 const Path = require('path')
 
 
 const mb = menubar({
-  tooltip: 'You are 1 click away from awesomeness',
   index: Path.join('file://', __dirname, 'index.html')
 })
 
 mb.on('ready', function ready () {
-  var x = "Thorsten";
+
+})
+
+mb.on('show', function ready () {
+    mb.window.webContents.send('reload', 'xxx');
+})
+
+mb.on('focus-lost', function ready () {
+  
 })

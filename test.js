@@ -44,12 +44,14 @@ var bookmark = function(id){
 var iMessage = require('imessage');
 var im = new iMessage();
 
+var lastLoad = 0;
 var map = {};
 var cache = [];
 var currentView = "all";
 var bookmarks = {};
 
 var buildList = function(rows){
+
   for (let obj of rows){
 
       map[obj.ROWID] = obj;
@@ -76,12 +78,12 @@ var buildList = function(rows){
       newElement.removeClass("template-entry");
       newElement.click(onclick);
 
-      jquery("body").prepend(newElement);
+      jquery(".entry-wrapper").prepend(newElement);
   }
 }
 
-var loadAll = function(){
-  jquery(".loading").fadeIn();
+var loadAll = function(clear){
+  //jquery(".loading").show();
 
   if(currentView == "all"){
     map = {};
@@ -91,9 +93,9 @@ var loadAll = function(){
   jquery(".header-element.right").removeClass("active-header");
   jquery(".header-element.left").addClass("active-header");
 
-  jquery(".template-entry").removeClass("entry");
-  jquery(".entry").remove();
-  jquery(".template-entry").addClass("entry");
+  if(clear){
+    clearList();
+  }
 
   storage.keys(function(error, keys) {
     bookmarks = arrayToHash(keys);
@@ -106,6 +108,7 @@ var loadAll = function(){
     jquery(".loading").hide();
   }else {
     im.getMessages("http", function(err, rows) {
+      lastLoad = rows.length;
       buildList(rows);
       jquery(".loading").hide();
     });
@@ -114,20 +117,24 @@ var loadAll = function(){
 
 }
 
-var loadBookmarks = function(){
+var loadBookmarks = function(clear){
   currentView = "bookmarks";
 
   jquery(".header-element.left").removeClass("active-header");
   jquery(".header-element.right").addClass("active-header");
 
-  jquery(".template-entry").removeClass("entry");
-  jquery(".entry").remove();
-  jquery(".template-entry").addClass("entry");
+  if(clear){
+    clearList();
+  }
 
   storage.getAll(function(error, data) {
     var array_values = hashToArray(data);
     buildList(array_values);
   });
+}
+
+var clearList = function(){
+  jquery(".entry-wrapper").html("");
 }
 
 var arrayToHash = function(array){
@@ -150,7 +157,20 @@ var hashToArray = function(hash){
 loadAll();
 
 ipcRenderer.on('reload', function(event, message) {
-  console.log("xxx")
-  main = {};
-  loadAll();
+  if(currentView != "all"){
+    return;
+  }
+
+  im.getDb(function(err, db) {
+    db.get("SELECT COUNT(*) as count FROM `message` WHERE `message`.text LIKE \"%http%\"", function(err, res) {
+      if(res.count > lastLoad){
+        jquery(".loading").hide();
+        loadAll();
+      }
+    });
+  })
+});
+
+ipcRenderer.on('hide', function(event, message) {
+  //...
 });
