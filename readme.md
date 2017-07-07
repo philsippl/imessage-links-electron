@@ -4,6 +4,8 @@ This is an simple electron app that lives in your menubar and gives you access t
 
 If you also have a ton of interesting links in your chat records, but just can't retrieve anything in the big pile of messages, this app is what you were looking for.
 
+![screenshot](https://github.com/philsippl/imessage-links-electron/raw/master/lit-screenshot.png)
+
 ## build instructions
 
 - run `npm install`
