@@ -4,6 +4,8 @@ var iMessage = require('imessage');
 var ta = require('time-ago')();
 const storage = require('electron-json-storage');
 var shell = require('electron').shell;
+var ipcRenderer = require('electron').ipcRenderer;
+
 //open links externally by default
 
 jquery(document).on('click', 'a[href^="http"]', function(event) {
@@ -79,6 +81,12 @@ var buildList = function(rows){
 }
 
 var loadAll = function(){
+  jquery(".loading").fadeIn();
+
+  if(currentView == "all"){
+    map = {};
+  }
+
   currentView = "all";
   jquery(".header-element.right").removeClass("active-header");
   jquery(".header-element.left").addClass("active-header");
@@ -95,11 +103,15 @@ var loadAll = function(){
 
   if(cache.length > 0){
     buildList(cache);
+    jquery(".loading").hide();
   }else {
     im.getMessages("http", function(err, rows) {
       buildList(rows);
+      jquery(".loading").hide();
     });
   }
+
+
 }
 
 var loadBookmarks = function(){
@@ -136,3 +148,9 @@ var hashToArray = function(hash){
 }
 
 loadAll();
+
+ipcRenderer.on('reload', function(event, message) {
+  console.log("xxx")
+  main = {};
+  loadAll();
+});

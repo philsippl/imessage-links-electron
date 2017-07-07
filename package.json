@@ -17,7 +17,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "build": "electron-packager . Example --platform=darwin --arch=x64 --version=0.36.0 --icon=Icon.icns",
+    "build": "electron-packager . LIT --overwrite --platform=darwin --arch=x64 --version=1.4.13 --icon=Icon.icns",
     "start": "electron .",
     "rebuild": "electron-rebuild -f -w sqlite3"
   }
